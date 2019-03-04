@@ -21,46 +21,86 @@ type alias Entry =
 
 type alias Entries = List Entry
 
-init : Entries
-init =
-  [Entry "" ""]
+type alias Model =
+ {
+   entries: Entries
+   , newEntry: Entry
+ }
+
+init : Model
+init = {
+  entries = [Entry "de" "mo"]
+  , newEntry = {key = "", value = ""}
+  }
+
+newEntry : Entry
+newEntry = {
+  key = ""
+  , value = ""
+  }
 
 -- UPDATE
 
 type Msg
-  = Add Entry
+  = Add
+  | UpdateNewKey String
+  | UpdateNewValue String
 
-update : Msg -> Entries -> Entries
-update msg entries =
+update : Msg -> Model -> Model
+update msg model =
   case msg of
-    Add newEntry ->
-      newEntry :: entries
+    Add ->
+      {
+        entries = model.entries ++ [model.newEntry],
+        newEntry = {key = "", value = ""}
+      }
+    UpdateNewKey str ->
+      {
+        newEntry = {
+          key = str
+          , value = model.newEntry.value
+        },
+        entries = model.entries
+      }
+    UpdateNewValue str ->
+      {
+        newEntry = {
+          key = model.newEntry.key
+          , value = str
+        },
+        entries = model.entries
+      }
 
 -- VIEW
 
-view : Entries -> Html Msg
-view entries =
---  div []
---    [ input [ type_ "text", placeholder "Type", value entry.key ]
---    , input [ type_ "text", placeholder "Valeur", value entry.value]  
---    , button [ onClick Add ] [ text "+" ]
---    ]
+view : Model -> Html Msg
+view model =
   div []
-    [ viewEntries entries ]
+    [ viewNewEntry model.newEntry
+    , viewEntries model.entries ]
+
+viewNewEntry : Entry -> Html Msg
+viewNewEntry entry =
+  div []
+    [ input [ type_ "text", placeholder "Type", value entry.key, onInput UpdateNewKey ] []
+    , input [ type_ "text", placeholder "Valeur", value entry.value, onInput UpdateNewValue ] []  
+    , button [ onClick (Add) ] [ text "+" ]
+  ]
 
 viewEntries : Entries -> Html Msg
 viewEntries entries =
-    section
-        [ Keyed.ul <|
-            List.map viewKeyedEntry (entries)
+    section []
+        [ 
+            Keyed.node "ul" [] (List.map viewKeyedEntry entries)
         ]
 
-viewKeyedEntry : Entry -> ( String, Html Msg )
+viewKeyedEntry : Entry -> (String, Html Msg)
 viewKeyedEntry entry =
-    ( viewEntry entry )
-
+    ( entry.key, viewEntry entry )
 
 viewEntry : Entry -> Html Msg
-viewEntry entry =
-    [ text entry.key ]
-    
+viewEntry entry = 
+  div []
+      [ div [] [ text entry.key ]
+      , div [] [ text entry.value ]
+      ]
