@@ -110,8 +110,8 @@ viewNewEntry entry =
 
 viewEntries : Entries -> Html Msg
 viewEntries entries =
-    section []
-        [ Keyed.node "ul" [] (List.map viewKeyedEntry entries)
+    table []
+        [ Keyed.node "tr" [] (List.map viewKeyedEntry entries)
         ]
 
 
@@ -122,7 +122,7 @@ viewKeyedEntry entry =
 
 viewEntry : Entry -> Html Msg
 viewEntry entry =
-    div []
-        [ div [] [ text entry.key ]
-        , div [] [ text entry.value ]
+     section []
+        [ td [] [ text entry.key ]
+        , td [] [ text entry.value ]
         ]
