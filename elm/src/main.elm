@@ -6,7 +6,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Keyed as Keyed
 import Tachyons exposing (classes, tachyons)
-import Tachyons.Classes exposing (f6, pa3, w_100, mw8, center, stripe_dark)
+import Tachyons.Classes exposing (center, f6, mw8, pa3, stripe_dark, w_100)
+
 
 
 -- import Date exposing (..)
@@ -94,13 +95,14 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [] [
-        tachyons.css -- XXX TODO use CDN in prod
+    div []
+        [ tachyons.css -- XXX TODO use CDN in prod
         , div []
             [ viewNewEntry model.newEntry
             , viewEntries model.entries
             ]
-    ]
+        ]
+
 
 viewNewEntry : Entry -> Html Msg
 viewNewEntry entry =
@@ -113,8 +115,8 @@ viewNewEntry entry =
 
 viewEntries : Entries -> Html Msg
 viewEntries entries =
-    table [ classes [ f6, w_100, mw8, center]]
-        [ Keyed.node "tr" [ classes [stripe_dark]] (List.map viewKeyedEntry entries)
+    table [ classes [ f6, w_100, mw8, center ] ]
+        [ Keyed.node "tr" [ classes [ stripe_dark ] ] (List.map viewKeyedEntry entries)
         ]
 
 
@@ -125,7 +127,7 @@ viewKeyedEntry entry =
 
 viewEntry : Entry -> Html Msg
 viewEntry entry =
-     section []
-        [ td [classes [pa3]] [ text entry.key ]
-        , td [classes [pa3]] [ text entry.value ]
+    section []
+        [ td [ classes [ pa3 ] ] [ text entry.key ]
+        , td [ classes [ pa3 ] ] [ text entry.value ]
         ]
